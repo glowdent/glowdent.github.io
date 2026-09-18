@@ -1,68 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#42b7c4">
-<title>Glowdent Review Assistant</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Glowdent Review Assistant</title>
 <style>
-:root{--teal:#42b7c4;--ink:#111827;--muted:#667085;--bg:#f4fbfc;--line:#dbe4e8}
-*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#eaf9fb,#fff);font-family:Arial,sans-serif;color:var(--ink)}
-.wrap{max-width:620px;margin:auto;padding:18px 15px 38px}.header{background:#000;border-radius:20px;padding:16px;margin-bottom:16px;text-align:center}.header img{max-width:100%;max-height:150px;object-fit:contain}
-.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 8px 28px rgba(16,24,40,.07);margin-bottom:14px}
-h1{font-size:26px;margin:0 0 6px;text-align:center}.sub{color:var(--muted);text-align:center;line-height:1.5;margin-bottom:20px}
-label{display:block;font-weight:700;margin:16px 0 8px}select,textarea{width:100%;padding:13px;border:1px solid #cfd8dc;border-radius:12px;font-size:16px;background:#fff}textarea{min-height:120px;resize:vertical}
-.langs{display:flex;gap:8px}.lang{flex:1;padding:11px;border:1px solid var(--line);border-radius:12px;text-align:center;font-weight:700;cursor:pointer}.lang.active{border-color:var(--teal);background:#e9fafc}
-button{width:100%;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:800;cursor:pointer;margin-top:12px}.primary{background:var(--teal);color:#06252a}.secondary{background:#eef2f4;color:var(--ink)}
-#result{display:none}.draft{background:#f7fafb;border:1px solid var(--line);border-radius:14px;padding:15px;line-height:1.65;white-space:pre-wrap}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}
-#copied{display:none;background:#ecfdf3;border:1px solid #b7ebca;padding:12px;border-radius:12px;margin-top:10px;text-align:center;font-weight:700}.footer{text-align:center;color:var(--muted);font-size:12px}
-</style>
-</head>
-<body>
-<div class="wrap">
-<div class="header"><img src="glowdent-logo.png" alt="Glowdent Dental And Aesthetic Clinic"></div>
-<div class="card">
-<h1 id="title">Share your experience</h1><div class="sub" id="subtitle">Your genuine feedback helps other patients understand your experience.</div>
-<label id="langLabel">Language</label>
-<div class="langs"><div class="lang active" data-lang="en">English</div><div class="lang" data-lang="mr">मराठी</div><div class="lang" data-lang="hi">हिन्दी</div></div>
-<label id="serviceLabel">What did you visit us for?</label>
-<select id="service">
-<option value="checkup">Dental check-up</option><option value="cleaning">Teeth cleaning</option><option value="rct">Root canal treatment</option><option value="filling">Dental filling</option><option value="crown">Crown & bridge</option><option value="extraction">Tooth extraction</option><option value="smile">Smile designing / cosmetic dentistry</option><option value="other">Other</option>
-</select>
-<label id="promptLabel">Tell us about your experience in your own words</label>
-<textarea id="experience" placeholder="Example: The doctor explained the treatment clearly and the procedure was comfortable."></textarea>
-<button class="primary" onclick="makeDraft()" id="generate">Create my review draft</button>
-</div>
-<div class="card" id="result">
-<label id="draftLabel">Your editable review draft</label><div class="draft" id="draft"></div>
-<button class="secondary" onclick="copyDraft()" id="copy">Copy review</button>
-<button class="primary" onclick="openGoogle()" id="open">Open Google Review</button>
-<div id="copied">Copied ✓ Now open Google and paste your review.</div>
-<div class="note" id="note">Please read and edit the draft so it accurately reflects your own experience before submitting it. You decide what to publish.</div>
-</div>
-<div class="footer">Glowdent Dental And Aesthetic Clinic • Nashik</div>
+body{font-family:Arial;margin:0;background:#eefbfd;color:#111827}.wrap{max-width:600px;margin:auto;padding:16px}.head{background:#000;border-radius:18px;padding:12px;text-align:center}.head img{max-width:100%;max-height:140px}.card{background:#fff;border-radius:18px;padding:20px;margin-top:14px;box-shadow:0 5px 20px #0001}h1{text-align:center}label{display:block;font-weight:bold;margin:15px 0 7px}select,textarea,button{width:100%;padding:13px;border-radius:11px;font-size:16px;box-sizing:border-box}select,textarea{border:1px solid #ccd8dc}textarea{min-height:110px}.row{display:flex;gap:8px}.pill{flex:1;padding:12px;border:1px solid #ccd8dc;border-radius:11px;text-align:center;font-weight:bold}.active{background:#e5fafc;border-color:#42b7c4}.primary{background:#42b7c4;border:0;font-weight:bold;margin-top:14px}.secondary{background:#eef2f4;border:0;font-weight:bold;margin-top:10px}.draft{background:#f7fafb;border:1px solid #ddd;border-radius:12px;padding:14px;line-height:1.6;white-space:pre-wrap}.note{font-size:12px;color:#667085;margin-top:10px;line-height:1.5}#result{display:none}
+</style></head><body><div class="wrap"><div class="head"><img src="glowdent-logo.png"></div>
+<div class="card"><h1>Share your experience</h1><p style="text-align:center;color:#667085">Your genuine feedback helps other patients.</p>
+<label>Language</label><div class="row"><div class="pill active" onclick="setLang('en',this)">English</div><div class="pill" onclick="setLang('mr',this)">मराठी</div><div class="pill" onclick="setLang('hi',this)">हिन्दी</div></div>
+<label>What type of service did you receive?</label><div class="row"><div class="pill active" onclick="setCat('dental',this)">🦷 Dental</div><div class="pill" onclick="setCat('skin',this)">✨ Skin & Aesthetic</div><div class="pill" onclick="setCat('hair',this)">💆 Hair & Scalp</div></div>
+<label>Select your service</label><select id="service"></select>
+<label>Tell us about your experience in your own words</label><textarea id="exp" placeholder="Example: Doctor explained everything clearly and the treatment was comfortable."></textarea>
+<button class="primary" onclick="makeDraft()">Create my review draft</button></div>
+<div class="card" id="result"><label>Your editable review draft</label><div class="draft" id="draft"></div><button class="secondary" onclick="copyDraft()">Copy review</button><button class="primary" onclick="openGoogle()">Open Google Review</button><p class="note">Please read and edit the draft so it accurately reflects your own experience before submitting it.</p></div>
 </div>
 <script>
-const GOOGLE_REVIEW_URL="https://search.google.com/local/writereview?placeid=ChIJjwrR3Evr3TsRhicO1vXN_Mg"; let lang="en";
-const T={
-en:{title:"Share your experience",subtitle:"Your genuine feedback helps other patients understand your experience.",lang:"Language",service:"What did you visit us for?",prompt:"Tell us about your experience in your own words",placeholder:"Example: The doctor explained the treatment clearly and the procedure was comfortable.",generate:"Create my review draft",draft:"Your editable review draft",copy:"Copy review",open:"Open Google Review",note:"Please read and edit the draft so it accurately reflects your own experience before submitting it.",empty:"Please describe your experience first."},
-mr:{title:"तुमचा अनुभव शेअर करा",subtitle:"तुमचा खरा अनुभव इतर रुग्णांना योग्य माहिती समजण्यास मदत करतो.",lang:"भाषा",service:"आपण कोणत्या उपचारासाठी आला/आलात?",prompt:"तुमचा अनुभव तुमच्या शब्दांत सांगा",placeholder:"उदा.: डॉक्टरांनी उपचार नीट समजावून सांगितले आणि उपचार आरामदायी झाला.",generate:"माझा रिव्ह्यू ड्राफ्ट तयार करा",draft:"तुमचा एडिट करता येणारा रिव्ह्यू",copy:"रिव्ह्यू कॉपी करा",open:"Google Review उघडा",note:"सबमिट करण्यापूर्वी ड्राफ्ट वाचा आणि तो तुमच्या खऱ्या अनुभवाशी जुळतो याची खात्री करा.",empty:"कृपया आधी तुमचा अनुभव लिहा."},
-hi:{title:"अपना अनुभव साझा करें",subtitle:"आपका वास्तविक अनुभव दूसरे मरीजों को सही जानकारी समझने में मदद करता है।",lang:"भाषा",service:"आप किस उपचार के लिए आए थे?",prompt:"अपने शब्दों में अपना अनुभव बताएं",placeholder:"उदाहरण: डॉक्टर ने उपचार अच्छी तरह समझाया और प्रक्रिया आरामदायक रही।",generate:"मेरा रिव्यू ड्राफ्ट बनाएं",draft:"आपका एडिट किया जा सकने वाला रिव्यू",copy:"रिव्यू कॉपी करें",open:"Google Review खोलें",note:"सबमिट करने से पहले ड्राफ्ट पढ़ें और सुनिश्चित करें कि वह आपके वास्तविक अनुभव को सही तरीके से दर्शाता है।",empty:"कृपया पहले अपना अनुभव लिखें।"}
+const G='https://search.google.com/local/writereview?placeid=ChIJjwrR3Evr3TsRhicO1vXN_Mg';
+let lang='en',cat='dental';
+const S={
+en:{dental:['Dental Check-up','Teeth Cleaning','Root Canal Treatment','Dental Filling','Crown & Bridge','Tooth Extraction','Smile Designing / Cosmetic Dentistry'],skin:['Skin Consultation','Medi-Facial','HydraFacial','Chemical Peel / Party Peel','Pigmentation & Dark Spot Treatment','Acne Treatment','Acne Scar Treatment','Skin Brightening / Glow Treatment','Skin Rejuvenation','Microneedling / Dermapen','Skin Tightening'],hair:['Hair Fall Treatment','PRP Hair Treatment','GFC Hair Treatment','Scalp Treatment','Dandruff / Scalp Care']},
+mr:{dental:['डेंटल चेक-अप','दातांची स्वच्छता','रूट कॅनाल उपचार','डेंटल फिलिंग','क्राउन आणि ब्रिज','दात काढण्याचा उपचार','स्माईल डिझायनिंग / कॉस्मेटिक डेंटिस्ट्री'],skin:['त्वचा सल्ला','मेडी-फेशियल','हायड्राफेशियल','केमिकल पील / पार्टी पील','पिग्मेंटेशन व डार्क स्पॉट उपचार','अॅक्ने उपचार','अॅक्ने स्कार उपचार','स्किन ब्राइटनिंग / ग्लो उपचार','स्किन रीजुव्हनेशन','मायक्रोनीडलिंग / डर्मापेन','स्किन टाइटनिंग'],hair:['केस गळती उपचार','PRP हेअर ट्रीटमेंट','GFC हेअर ट्रीटमेंट','स्कॅल्प ट्रीटमेंट','कोंडा / स्कॅल्प केअर']},
+hi:{dental:['डेंटल चेक-अप','दांतों की सफाई','रूट कैनाल उपचार','डेंटल फिलिंग','क्राउन और ब्रिज','दांत निकालने का उपचार','स्माइल डिजाइनिंग / कॉस्मेटिक डेंटिस्ट्री'],skin:['स्किन कंसल्टेशन','मेडी-फेशियल','हाइड्राफेशियल','केमिकल पील / पार्टी पील','पिग्मेंटेशन व डार्क स्पॉट उपचार','एक्ने उपचार','एक्ने स्कार उपचार','स्किन ब्राइटनिंग / ग्लो ट्रीटमेंट','स्किन रीजुवेनेशन','माइक्रोनीडलिंग / डर्मापेन','स्किन टाइटनिंग'],hair:['हेयर फॉल ट्रीटमेंट','PRP हेयर ट्रीटमेंट','GFC हेयर ट्रीटमेंट','स्कैल्प ट्रीटमेंट','डैंड्रफ / स्कैल्प केयर']}
 };
-const services={
-en:{checkup:"dental check-up",cleaning:"teeth cleaning",rct:"root canal treatment",filling:"dental filling",crown:"crown and bridge treatment",extraction:"tooth extraction",smile:"smile designing / cosmetic dentistry",other:"dental treatment"},
-mr:{checkup:"डेंटल चेक-अप",cleaning:"दातांची स्वच्छता",rct:"रूट कॅनाल उपचार",filling:"डेंटल फिलिंग",crown:"क्राउन आणि ब्रिज उपचार",extraction:"दात काढण्याचा उपचार",smile:"स्माईल डिझायनिंग / कॉस्मेटिक डेंटिस्ट्री",other:"दंत उपचार"},
-hi:{checkup:"डेंटल चेक-अप",cleaning:"दांतों की सफाई",rct:"रूट कैनाल उपचार",filling:"डेंटल फिलिंग",crown:"क्राउन और ब्रिज उपचार",extraction:"दांत निकालने का उपचार",smile:"स्माइल डिजाइनिंग / कॉस्मेटिक डेंटिस्ट्री",other:"दंत उपचार"}
-};
-function applyLanguage(){const x=T[lang];title.textContent=x.title;subtitle.textContent=x.subtitle;langLabel.textContent=x.lang;serviceLabel.textContent=x.service;promptLabel.textContent=x.prompt;experience.placeholder=x.placeholder;generate.textContent=x.generate;draftLabel.textContent=x.draft;copy.textContent=x.copy;open.textContent=x.open;note.textContent=x.note;}
-document.querySelectorAll(".lang").forEach(el=>el.onclick=()=>{document.querySelectorAll(".lang").forEach(x=>x.classList.remove("active"));el.classList.add("active");lang=el.dataset.lang;applyLanguage();});
-function makeDraft(){const exp=experience.value.trim();if(!exp){alert(T[lang].empty);return;}const s=services[lang][service.value];let d="";
-if(lang==="en")d=`I had a good experience at Glowdent Dental And Aesthetic Clinic in Nashik. I visited for ${s}. ${exp} I appreciated the care and clear communication throughout my visit.`;
-if(lang==="mr")d=`माझा Glowdent Dental And Aesthetic Clinic, Nashik येथे चांगला अनुभव आला. मी ${s} साठी भेट दिली. ${exp} उपचारादरम्यान मिळालेली काळजी आणि स्पष्ट मार्गदर्शन मला आवडले.`;
-if(lang==="hi")d=`Glowdent Dental And Aesthetic Clinic, Nashik में मेरा अच्छा अनुभव रहा। मैं ${s} के लिए आया/आई था/थी। ${exp} उपचार के दौरान मिली देखभाल और स्पष्ट जानकारी मुझे अच्छी लगी।`;
-draft.textContent=d;result.style.display="block";copied.style.display="none";result.scrollIntoView({behavior:"smooth"});}
-async function copyDraft(){await navigator.clipboard.writeText(draft.textContent);copied.style.display="block";}
-function openGoogle(){window.open(GOOGLE_REVIEW_URL,"_blank");}
-applyLanguage();
-</script>
-</body></html>
+function fill(){service.innerHTML='';S[lang][cat].forEach(x=>{let o=document.createElement('option');o.textContent=x;service.appendChild(o)})}
+function setLang(x,e){lang=x;document.querySelectorAll('.row:first-of-type .pill').forEach(p=>p.classList.remove('active'));e.classList.add('active');fill()}
+function setCat(x,e){cat=x;e.parentNode.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));e.classList.add('active');fill()}
+function makeDraft(){let x=exp.value.trim();if(!x){alert('Please describe your experience first.');return}draft.textContent=`I had a good experience at Glowdent Dental And Aesthetic Clinic in Nashik. I visited for ${service.value}. ${x} I appreciated the care and clear communication throughout my visit.`;result.style.display='block';result.scrollIntoView({behavior:'smooth'})}
+async function copyDraft(){await navigator.clipboard.writeText(draft.textContent);alert('Review copied. Now open Google and paste it.')}
+function openGoogle(){window.open(G,'_blank')}
+fill();
+</script></body></html>
